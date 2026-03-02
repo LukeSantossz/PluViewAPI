@@ -1,0 +1,77 @@
+
+# =============================================
+# Cloud Build - Deploy para Google Cloud Run
+# =============================================
+# Trigger automatico: push na branch main
+#
+# Variaveis necessarias no Cloud Build (Substitution variables):
+#   _REGION: europe-west1
+#   _SERVICE_NAME: plueview
+#
+# Secrets necessarios no Secret Manager:
+#   DATABASE_URL: URL de conexao do PostgreSQL
+#
+# Para configurar o trigger:
+#   1. Acesse Cloud Build > Triggers
+#   2. Crie um trigger conectado ao repositorio
+#   3. Configure para executar em push na branch main
+# =============================================
+
+steps:
+  # Step 1: Build da imagem Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:latest'
+      - '.'
+
+  # Step 2: Push da imagem para Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}'
+
+  # Step 3: Deploy no Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-secrets'
+      - 'DATABASE_URL=DATABASE_URL:latest,DIRECT_URL=DATABASE_URL:latest'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '10'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--timeout'
+      - '300s'
+
+# Imagens a serem armazenadas no Artifact Registry
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:latest'
+
+# Variaveis de substituicao (podem ser sobrescritas no trigger)
+substitutions:
+  _REGION: europe-west1
+  _SERVICE_NAME: plueview
+
+# Configuracoes
+options:
+  logging: CLOUD_LOGGING_ONLY
