@@ -1,98 +1,186 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# PluViewAPI
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API de monitoramento de dados meteorologicos IoT, construida com NestJS e Prisma.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Pre-requisitos
 
-## Description
+- Node.js 20+
+- PostgreSQL 16+ (ou Docker)
+- npm
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Setup Rapido
 
-## Project setup
+### 1. Instalar dependencias
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+### 2. Configurar variaveis de ambiente
 
 ```bash
-# development
-$ npm run start
+# Copie o arquivo de exemplo
+cp .env.example .env
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Edite o .env com suas configuracoes (se necessario)
 ```
 
-## Run tests
+### 3. Iniciar banco de dados
+
+**Opcao A - Com Docker (recomendado):**
+```bash
+npm run docker:up
+```
+
+**Opcao B - PostgreSQL local:**
+Certifique-se de que o PostgreSQL esta rodando e a DATABASE_URL esta correta no `.env`
+
+### 4. Executar migrations
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run db:migrate:deploy
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 5. Iniciar a aplicacao
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Desenvolvimento (com hot-reload)
+npm run start:dev
+
+# Producao
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+A API estara disponivel em `http://localhost:3000`
 
-## Resources
+## Scripts Disponiveis
 
-Check out a few resources that may come in handy when working with NestJS:
+| Script | Descricao |
+|--------|-----------|
+| `npm run start:dev` | Inicia em modo desenvolvimento (hot-reload) |
+| `npm run start:debug` | Inicia em modo debug |
+| `npm run start:prod` | Inicia em modo producao |
+| `npm run build` | Compila o projeto |
+| `npm run test` | Executa testes unitarios |
+| `npm run test:watch` | Testes em modo watch |
+| `npm run test:cov` | Testes com coverage |
+| `npm run test:e2e` | Testes end-to-end |
+| `npm run lint` | Executa ESLint |
+| `npm run format` | Formata codigo com Prettier |
+| `npm run db:migrate` | Cria nova migration |
+| `npm run db:migrate:deploy` | Aplica migrations pendentes |
+| `npm run db:push` | Push do schema (dev) |
+| `npm run db:studio` | Abre Prisma Studio |
+| `npm run docker:up` | Inicia containers Docker |
+| `npm run docker:down` | Para containers Docker |
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Endpoints
 
-## Support
+### Stations
+- `GET /station` - Listar estacoes
+- `POST /station` - Criar estacao
+- `GET /station/:id` - Obter estacao
+- `PATCH /station/:id` - Atualizar estacao
+- `DELETE /station/:id` - Deletar estacao
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Weather Data
+- `GET /data` - Listar dados meteorologicos
+- `POST /data` - Criar registro
+- `GET /data/:id` - Obter registro
+- `PATCH /data/:id` - Atualizar registro
+- `DELETE /data/:id` - Deletar registro
 
-## Stay in touch
+### IoT (Leituras brutas)
+- `GET /iot` - Listar leituras
+- `POST /iot` - Criar leitura
+- `GET /iot/:id` - Obter leitura
+- `PATCH /iot/:id` - Atualizar leitura
+- `DELETE /iot/:id` - Deletar leitura
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Docker
 
-## License
+Para rodar tudo com Docker:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+docker-compose up -d
+```
+
+Isso ira:
+1. Iniciar PostgreSQL na porta 5432
+2. Executar migrations automaticamente
+3. Iniciar a API na porta 3000
+
+## Deploy no Google Cloud Run
+
+A API esta configurada para deploy automatico no Cloud Run via Cloud Build.
+
+**URL de producao:** https://plueview-659121705045.europe-west1.run.app
+
+### Configuracao inicial (uma vez)
+
+1. **Criar repositorio no Artifact Registry:**
+```bash
+gcloud artifacts repositories create plueview \
+  --repository-format=docker \
+  --location=europe-west1
+```
+
+2. **Criar secret no Secret Manager:**
+```bash
+echo -n "postgresql://user:pass@host:5432/db" | \
+  gcloud secrets create DATABASE_URL --data-file=-
+```
+
+3. **Dar permissao ao Cloud Build:**
+```bash
+# Obter numero do projeto
+PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+
+# Permissao para deploy no Cloud Run
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
+  --role="roles/run.admin"
+
+# Permissao para acessar secrets
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
+# Permissao para usar service account
+gcloud iam service-accounts add-iam-policy-binding \
+  $PROJECT_NUMBER-compute@developer.gserviceaccount.com \
+  --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser"
+```
+
+4. **Criar trigger no Cloud Build:**
+   - Acesse: Console GCP > Cloud Build > Triggers
+   - Conecte o repositorio GitHub
+   - Crie trigger para branch `main`
+   - Use o arquivo `cloudbuild.yaml`
+
+### Deploy manual
+
+```bash
+gcloud run deploy plueview \
+  --source . \
+  --region europe-west1 \
+  --allow-unauthenticated
+```
+
+## Estrutura do Projeto
+
+```
+src/
+  main.ts           # Entry point
+  app.module.ts     # Modulo raiz
+  data/             # Modulo de dados meteorologicos
+  iot/              # Modulo de leituras IoT
+  station/          # Modulo de estacoes
+  prisma/           # Modulo do Prisma ORM
+prisma/
+  schema.prisma     # Schema do banco de dados
+  migrations/       # Historico de migrations
+cloudbuild.yaml     # Config de CI/CD para Cloud Run
+```
