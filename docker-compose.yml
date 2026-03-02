@@ -32,6 +32,8 @@ services:
     ports:
       - "3000:3000"
     environment:
+      PORT: 3000
+      NODE_ENV: production
       DATABASE_URL: postgresql://${POSTGRES_USER:-plueview}:${POSTGRES_PASSWORD:-plueview123}@postgres:5432/${POSTGRES_DB:-plueview}?schema=public
       DIRECT_URL: postgresql://${POSTGRES_USER:-plueview}:${POSTGRES_PASSWORD:-plueview123}@postgres:5432/${POSTGRES_DB:-plueview}?schema=public
     depends_on:
