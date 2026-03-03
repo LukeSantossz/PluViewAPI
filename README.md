@@ -108,9 +108,10 @@ docker-compose up -d
 
 Isso ira:
 1. Iniciar PostgreSQL na porta 5432
-2. Executar migrations automaticamente
+2. (Opcional) Executar migrations automaticamente, desde que o container consiga baixar o Prisma CLI via `npx` na primeira execucao
 3. Iniciar a API na porta 3000
 
+> **Observacao:** o Dockerfile atual instala apenas dependencias de producao (`npm ci --omit=dev`), portanto o Prisma CLI nao vem pre-instalado na imagem. O comando definido no `docker-compose.yml` usa `npx` para rodar as migrations (por exemplo, `npx prisma migrate deploy`), o que exige acesso a internet na primeira execucao para baixar o CLI. Em ambientes sem acesso a rede, execute as migrations manualmente/localmente antes de subir os containers ou ajuste a imagem para incluir o Prisma CLI como dependencia de producao.
 ## Deploy no Google Cloud Run
 
 A API esta configurada para deploy automatico no Cloud Run via Cloud Build.
